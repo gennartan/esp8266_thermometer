@@ -1,0 +1,3 @@
+[submodule "lib/esp8266_communication_library"]
+	path = lib/esp8266_communication_library
+	url = git@github.com:gennartan/esp8266_communication_library.git
