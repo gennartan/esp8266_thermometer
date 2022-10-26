@@ -1,3 +1,6 @@
 [submodule "lib/esp8266_communication_library"]
 	path = lib/esp8266_communication_library
 	url = git@github.com:gennartan/esp8266_communication_library.git
+[submodule "lib/esp8266_thermometer_sensor"]
+	path = lib/esp8266_thermometer_sensor
+	url = git@github.com:gennartan/esp8266_thermometer_sensor.git

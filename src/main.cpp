@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include <Communication_Manager.hpp>
+#include <Thermometer_Sensor.hpp>
 #include <ESP8266WiFi.h>
 
 #define WLANSSID "WiFi-2.4-8876"
@@ -8,12 +9,13 @@
 
 
 Communication_Manager *mm;
+Thermometer_Sensor *thermo;
 
 void setup()
 {
 	Serial.begin(115200);
 	mm = new Communication_Manager(WLANSSID, WLANPWD, "192.168.1.35", 1883, "superClient");
-	Serial.printf("Setup finished\n");
+	thermo = new Thermometer_Sensor(0);
 }
 
 
@@ -23,7 +25,10 @@ void loop()
 	yield();
 
 	mm->publish("test/topic", "hello world I am here " + std::to_string(5));
-	delay(1000);
+
+	float temp = thermo->measure_temperature_smoothed();
+	mm->publish("test/temperature",  std::to_string(temp));
+	delay(2000);
 
 
 	mm->check_wifi_connection();
