@@ -7,6 +7,8 @@
 #define WLANSSID "WiFi-2.4-8876"
 #define WLANPWD "wwcd92ppr6n4m"
 
+#define THERMOMETER_PIN 0
+#define UPDATE_INTERVAL 30000
 
 Communication_Manager *mm;
 Thermometer_Sensor *thermo;
@@ -14,23 +16,17 @@ Thermometer_Sensor *thermo;
 void setup()
 {
 	Serial.begin(115200);
-	mm = new Communication_Manager(WLANSSID, WLANPWD, "192.168.1.35", 1883, "superClient");
-	thermo = new Thermometer_Sensor(0);
+	thermo = new Thermometer_Sensor(THERMOMETER_PIN);
+	mm = new Communication_Manager(WLANSSID, WLANPWD, "192.168.1.35", 1883, thermo->get_name());
 }
-
 
 void loop()
 {
-	Serial.println("Hello");
-	yield();
-
-	mm->publish("test/topic", "hello world I am here " + std::to_string(5));
-
 	float temp = thermo->measure_temperature_smoothed();
-	mm->publish("test/temperature",  std::to_string(temp));
-	delay(2000);
-
+	mm->publish("temperature/" + thermo->get_name(), std::to_string(temp));
 
 	mm->check_wifi_connection();
 	mm->check_mqtt_connection();
+
+	delay(UPDATE_INTERVAL);
 }
